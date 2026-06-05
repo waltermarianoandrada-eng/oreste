@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oreste Comello | Galería de Arte</title>
+    <meta name="description" content="Galería de arte virtual y colección de obras de Oreste Comello. Pintura contemporánea y bellas artes.">
+    
+    <!-- Google Fonts: Cinzel for elegant headers, Outfit for clean body text -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Outfit:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- PWA settings -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="icon-192.png">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <meta name="theme-color" content="#121212">
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Soft background lighting glow effects -->
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+
+    <!-- Header Navigation -->
+    <header class="gallery-header">
+        <div class="header-left">
+            <button id="adminAccessBtn" class="btn-icon-admin" title="Panel de Administración">
+                <i class="fa-solid fa-key"></i>
+                <span class="btn-text">Admin</span>
+            </button>
+            <div id="adminBadge" class="admin-active-badge hidden">
+                <span class="pulse-dot"></span> Modo Admin
+                <button id="logoutBtn" title="Salir de Modo Admin"><i class="fa-solid fa-right-from-bracket"></i></button>
+            </div>
+        </div>
+        
+        <div class="header-center">
+            <a href="#" class="brand-link">
+                <span class="brand-surname">Comello</span>
+                <span class="brand-title">Oreste Comello</span>
+            </a>
+        </div>
+        
+        <div class="header-right">
+            <button id="installPwaBtn" class="btn-install-pwa hidden">
+                <i class="fa-solid fa-circle-down"></i> Instalar App
+            </button>
+        </div>
+    </header>
+
+    <main class="gallery-container">
+        
+        <!-- Hero introduction -->
+        <section class="gallery-hero">
+            <div class="hero-profile-container">
+                <div class="artist-profile-img-wrapper">
+                    <img src="artist-profile.png" alt="Oreste Comello" class="artist-profile-img">
+                </div>
+                <div class="hero-content">
+                    <h1 class="artist-title">Oreste Comello</h1>
+                    <p class="artist-subtitle">Pintor & Escultor Contemporáneo</p>
+                    <div class="elegant-divider">
+                        <span class="divider-line"></span>
+                        <span class="divider-diamond"></span>
+                        <span class="divider-line"></span>
+                    </div>
+                    <p class="artist-bio">
+                        Nacido el 19 de marzo de 1959 en Luca (Córdoba, Argentina), Oreste Comello realizó sus estudios en el Instituto Privado Dean Funes y actualmente reside en la Ciudad de La Rioja. Es un artista plástico cuya obra se caracteriza por una exploración poética de la luz, el volumen y las emociones humanas a través de la técnica clásica y la sensibilidad moderna. Bienvenidos a su catálogo digital.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Filters -->
+            <div class="filter-controls">
+                <button class="filter-btn active" data-filter="all">Todas las Obras</button>
+                <button class="filter-btn" data-filter="oleo">Óleo</button>
+                <button class="filter-btn" data-filter="acuarela">Acuarela</button>
+                <button class="filter-btn" data-filter="dibujo">Dibujo</button>
+                <button class="filter-btn" data-filter="escultura">Escultura</button>
+            </div>
+        </section>
+
+        <!-- Gallery Grid -->
+        <section class="gallery-showcase">
+            <div id="galleryGrid" class="gallery-grid">
+                <!-- Artworks loaded dynamically by app.js -->
+            </div>
+            
+            <div id="emptyGalleryState" class="empty-state hidden">
+                <i class="fa-solid fa-palette empty-icon"></i>
+                <h3>La galería está en blanco</h3>
+                <p>No se encontraron obras registradas. Inicia sesión como administrador para añadir la primera obra.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="gallery-footer">
+        <p>&copy; 2026 Oreste Comello. Todos los derechos reservados.</p>
+        <p class="credits">Desarrollado como Galería de Arte Interactiva PWA</p>
+    </footer>
+
+    <!-- MODAL 1: Password Authenticator -->
+    <div class="modal" id="loginModal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-box glassmorphism">
+            <button class="modal-close" id="closeLoginBtn"><i class="fa-solid fa-xmark"></i></button>
+            <div class="modal-header">
+                <i class="fa-solid fa-lock modal-header-icon"></i>
+                <h2>Acceso de Administrador</h2>
+                <p>Ingrese la clave para gestionar el catálogo de la galería.</p>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <input type="password" id="adminPassword" placeholder="Contraseña" required autocomplete="current-password">
+                    <span id="loginErrorMsg" class="error-msg hidden">Contraseña incorrecta. Inténtelo de nuevo.</span>
+                </div>
+                <button type="submit" class="btn btn-gold btn-block">Acceder</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 2: Admin Panel (Add Artwork) -->
+    <div class="modal" id="adminPanelModal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-box glassmorphism max-w-lg">
+            <button class="modal-close" id="closeAdminPanelBtn"><i class="fa-solid fa-xmark"></i></button>
+            <div class="modal-header">
+                <i class="fa-solid fa-sliders modal-header-icon"></i>
+                <h2>Panel de Control</h2>
+                <p>Añada una nueva pieza de arte a la exhibición.</p>
+            </div>
+            
+            <div class="admin-actions">
+                <form id="addArtworkForm">
+                    <div class="form-group">
+                        <label for="artTitle">Título de la Obra</label>
+                        <input type="text" id="artTitle" placeholder="Ej: Atardecer en Venecia" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="artYear">Año</label>
+                            <input type="number" id="artYear" min="1800" max="2100" placeholder="Ej: 2024" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="artCategory">Técnica / Categoría</label>
+                            <select id="artCategory" required>
+                                <option value="oleo">Óleo</option>
+                                <option value="acuarela">Acuarela</option>
+                                <option value="dibujo">Dibujo</option>
+                                <option value="escultura">Escultura</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="artMedium">Soporte/Materiales</label>
+                            <input type="text" id="artMedium" placeholder="Ej: Lienzo sobre bastidor, Papel de algodón">
+                        </div>
+                        <div class="form-group">
+                            <label for="artSize">Dimensiones</label>
+                            <input type="text" id="artSize" placeholder="Ej: 80x100 cm">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Imagen del Cuadro</label>
+                        <div class="image-upload-tabs">
+                            <button type="button" class="tab-upload-btn active" data-tab="upload-file">Archivo Local</button>
+                            <button type="button" class="tab-upload-btn" data-tab="upload-url">URL de Imagen</button>
+                        </div>
+                        
+                        <!-- File Upload Tab -->
+                        <div class="upload-tab-pane active" id="pane-upload-file">
+                            <div class="dropzone" id="imageDropzone">
+                                <i class="fa-solid fa-cloud-arrow-up dropzone-icon"></i>
+                                <p>Arrastra tu imagen aquí o haz clic para buscar</p>
+                                <span class="dropzone-sub">Formatos recomendados: JPG, PNG (máx. 1.5MB)</span>
+                                <input type="file" id="artFile" accept="image/*" class="hidden">
+                            </div>
+                        </div>
+
+                        <!-- URL Tab -->
+                        <div class="upload-tab-pane" id="pane-upload-url">
+                            <input type="url" id="artUrl" placeholder="https://ejemplo.com/imagen.jpg">
+                        </div>
+
+                        <!-- Image Preview -->
+                        <div id="imagePreviewContainer" class="image-preview-box hidden">
+                            <img id="imagePreview" src="" alt="Vista previa de la obra">
+                            <button type="button" id="removePreviewBtn" class="btn-remove-preview"><i class="fa-solid fa-trash"></i> Quitar imagen</button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-gold btn-block btn-lg"><i class="fa-solid fa-plus"></i> Añadir a la Galería</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 3: Lightbox Viewer (Full Screen Image Details) -->
+    <div class="modal lightbox" id="lightboxModal">
+        <div class="modal-backdrop"></div>
+        
+        <button class="lightbox-nav prev" id="lightboxPrevBtn" aria-label="Anterior"><i class="fa-solid fa-chevron-left"></i></button>
+        <button class="lightbox-nav next" id="lightboxNextBtn" aria-label="Siguiente"><i class="fa-solid fa-chevron-right"></i></button>
+        <button class="modal-close" id="closeLightboxBtn"><i class="fa-solid fa-xmark"></i></button>
+        
+        <div class="lightbox-content">
+            <div class="lightbox-image-wrapper">
+                <img id="lightboxImage" src="" alt="Obra de arte ampliada">
+            </div>
+            <div class="lightbox-info glassmorphism">
+                <div class="lightbox-meta">
+                    <span id="lightboxCategory" class="artwork-badge">ÓLEO</span>
+                    <span id="lightboxYear" class="artwork-year">2024</span>
+                </div>
+                <h2 id="lightboxTitle">Título de la Obra</h2>
+                <div class="lightbox-details">
+                    <span id="lightboxMedium"><i class="fa-solid fa-palette"></i> Óleo sobre lienzo</span>
+                    <span id="lightboxSize"><i class="fa-solid fa-ruler-combined"></i> 100 x 80 cm</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast System -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- App Script -->
+    <script type="module" src="app.js"></script>
+</body>
+</html>
