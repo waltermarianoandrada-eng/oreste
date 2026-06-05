@@ -11,7 +11,7 @@ const INITIAL_ARTWORKS = [
         category: "oleo",
         medium: "Óleo sobre lienzo",
         size: "80 x 60 cm",
-        image: "obra-playa.jpg"
+        image: "/obra-playa.jpg"
     },
     {
         id: "artwork-soldado",
@@ -20,7 +20,7 @@ const INITIAL_ARTWORKS = [
         category: "dibujo",
         medium: "Óleo monocromático sobre lienzo",
         size: "70 x 50 cm",
-        image: "obra-soldado.jpg"
+        image: "/obra-soldado.jpg"
     }
 ];
 
@@ -103,6 +103,19 @@ function loadState() {
             if (hasOldMocks) {
                 artworks = [...INITIAL_ARTWORKS];
                 saveState();
+            } else {
+                // Corrección dinámica de rutas para Vite
+                let updated = false;
+                artworks = artworks.map(art => {
+                    if (art.image && !art.image.startsWith("/") && !art.image.startsWith("http") && !art.image.startsWith("data:")) {
+                        art.image = "/" + art.image;
+                        updated = true;
+                    }
+                    return art;
+                });
+                if (updated) {
+                    saveState();
+                }
             }
         } catch (e) {
             console.error("Error parsing localStorage artworks, resetting to defaults", e);
