@@ -9,7 +9,8 @@ const ASSETS = [
   './icon-512.png',
   './artist-profile.png',
   './obra-playa.jpg',
-  './obra-soldado.jpg'
+  './obra-soldado.jpg',
+  './obra-victoria.jpg'
 ];
 
 // Install Event

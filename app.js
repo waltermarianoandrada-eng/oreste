@@ -21,6 +21,15 @@ const INITIAL_ARTWORKS = [
         medium: "Óleo monocromático sobre lienzo",
         size: "70 x 50 cm",
         image: "/obra-soldado.jpg"
+    },
+    {
+        id: "artwork-victoria",
+        title: "Victoria Romero",
+        year: 2026,
+        category: "dibujo",
+        medium: "Dibujo monocromático",
+        size: "70 x 50 cm",
+        image: "/obra-victoria.jpg"
     }
 ];
 
@@ -104,8 +113,15 @@ function loadState() {
                 artworks = [...INITIAL_ARTWORKS];
                 saveState();
             } else {
-                // Corrección dinámica de rutas para Vite
+                // Asegurar que la obra de Victoria Romero esté agregada si no existe
+                const hasVictoria = artworks.some(art => art.id === "artwork-victoria");
                 let updated = false;
+                if (!hasVictoria) {
+                    artworks.push(INITIAL_ARTWORKS.find(art => art.id === "artwork-victoria"));
+                    updated = true;
+                }
+                
+                // Corrección dinámica de rutas para Vite
                 artworks = artworks.map(art => {
                     if (art.image && !art.image.startsWith("/") && !art.image.startsWith("http") && !art.image.startsWith("data:")) {
                         art.image = "/" + art.image;
