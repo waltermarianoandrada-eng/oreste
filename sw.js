@@ -1,4 +1,4 @@
-const CACHE_NAME = 'comello-art-gallery-v1';
+const CACHE_NAME = 'comello-art-gallery-v2';
 const ASSETS = [
   './',
   './index.html',
