@@ -22,6 +22,10 @@ const INITIAL_ARTWORKS = [
         category: "oleo",
         medium: "Óleo sobre lienzo",
         size: "80 x 60 cm",
+        author: "O. J. Comello",
+        date: "19 de mayo de 2026",
+        origin: "Colección privada, La Rioja, Argentina",
+        description: "Obra realizada por especial encargo y dedicada a un reconocido empresario del sector de la cafetería de La Rioja (MONACO), una figura profundamente valorada y querida por el artista. La pintura captura un momento de íntima serenidad: una pareja caminando de la mano a la orilla del mar, de espaldas al espectador, avanzando hacia un horizonte custodiado por montañas bajo un cielo de nubes expresivas. Lejos del ritmo urbano y comercial, el cuadro evoca el descanso, el compañerismo y la complicidad del afecto sincero. Una pieza que fusiona el arte con la gratitud y la amistad entrañable que une al pintor con su destinatario.",
         image: "/obra-playa.jpg"
     },
     {
@@ -154,7 +158,7 @@ function loadState() {
                     } else {
                         // Obra existente: sincronizar campos editables (title, medium, size, author, description, image estática)
                         const existing = artworks[existingIndex];
-                        const fieldsToSync = ["title", "year", "medium", "size", "author", "description"];
+                        const fieldsToSync = ["title", "year", "medium", "size", "author", "date", "origin", "tribute", "description"];
                         fieldsToSync.forEach(field => {
                             if (initArt[field] !== undefined && existing[field] !== initArt[field]) {
                                 existing[field] = initArt[field];
@@ -601,6 +605,18 @@ function openLightbox(index) {
         } else {
             lightboxAuthor.innerHTML = "";
             lightboxAuthor.style.display = "none";
+        }
+    }
+
+    // Date field
+    const lightboxDate = document.getElementById("lightboxDate");
+    if (lightboxDate) {
+        if (art.date) {
+            lightboxDate.innerHTML = `<i class="fa-solid fa-calendar-days"></i> ${art.date}`;
+            lightboxDate.style.display = "";
+        } else {
+            lightboxDate.innerHTML = "";
+            lightboxDate.style.display = "none";
         }
     }
 
