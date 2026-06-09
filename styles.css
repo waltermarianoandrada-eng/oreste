@@ -996,6 +996,24 @@ textarea:focus {
     margin-right: 5px;
 }
 
+/* Lightbox origin/collection block */
+.lightbox-origin-block {
+    margin-top: 10px;
+    text-align: center;
+}
+
+#lightboxOrigin {
+    font-size: 0.82rem;
+    color: var(--color-text-muted);
+    font-style: italic;
+    letter-spacing: 0.03em;
+}
+
+#lightboxOrigin i {
+    color: var(--color-gold);
+    margin-right: 5px;
+}
+
 /* Lightbox description block */
 .lightbox-description-block {
     margin-top: 16px;

@@ -27,10 +27,13 @@ const INITIAL_ARTWORKS = [
     {
         id: "artwork-soldado",
         title: "Retrato del General",
-        year: 2025,
+        year: 2026,
         category: "dibujo",
         medium: "Óleo monocromático sobre lienzo",
-        size: "70 x 50 cm",
+        size: "0.90 m × 0.70 m",
+        author: "O. J. Comello (Junio, 2026)",
+        origin: "Colección particular, La Rioja, Argentina",
+        description: "Este retrato ecuestre/militar en busto fue pintado a pedido para un empresario riojano. Con una paleta estrictamente monocroma que emula la estética de la fotografía histórica en blanco y negro, el autor retrata al General Videla portando la gorra de gala con el escudo nacional. La atmósfera difuminada del fondo contrasta con la claridad del texto inferior, una máxima que actúa como declaración de principios del personaje y del contexto representado. La obra fusiona el arte del retrato por encargo con la memoria política e institucional del siglo XX argentino.",
         image: "/obra-soldado.jpg"
     },
     {
@@ -593,6 +596,18 @@ function openLightbox(index) {
         } else {
             lightboxDescription.textContent = "";
             lightboxDescription.parentElement.style.display = "none";
+        }
+    }
+
+    // Origin/Collection field
+    const lightboxOrigin = document.getElementById("lightboxOrigin");
+    if (lightboxOrigin) {
+        if (art.origin) {
+            lightboxOrigin.innerHTML = `<i class="fa-solid fa-location-dot"></i> ${art.origin}`;
+            lightboxOrigin.style.display = "";
+        } else {
+            lightboxOrigin.innerHTML = "";
+            lightboxOrigin.style.display = "none";
         }
     }
 
