@@ -175,6 +175,16 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="artAuthor">Autor (opcional)</label>
+                        <input type="text" id="artAuthor" placeholder="Ej: O. J. Comello (Noviembre, 2009)">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="artDescription">Descripción de la obra (opcional)</label>
+                        <textarea id="artDescription" rows="3" placeholder="Describe la temática, técnica o significado de la obra..."></textarea>
+                    </div>
+
+                    <div class="form-group">
                         <label>Imagen del Cuadro</label>
                         <div class="image-upload-tabs">
                             <button type="button" class="tab-upload-btn active" data-tab="upload-file">Archivo Local</button>
@@ -230,6 +240,10 @@
                 <div class="lightbox-details">
                     <span id="lightboxMedium"><i class="fa-solid fa-palette"></i> Óleo sobre lienzo</span>
                     <span id="lightboxSize"><i class="fa-solid fa-ruler-combined"></i> 100 x 80 cm</span>
+                    <span id="lightboxAuthor"><i class="fa-solid fa-user-pen"></i> </span>
+                </div>
+                <div class="lightbox-description-block">
+                    <p id="lightboxDescription"></p>
                 </div>
             </div>
         </div>

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'comello-art-gallery-v5';
+const CACHE_NAME = 'comello-art-gallery-v6';
 const ASSETS = [
   './',
   './index.html',
@@ -8,6 +8,7 @@ const ASSETS = [
   './icon-192.png',
   './icon-512.png',
   './artist-profile.png',
+  './obra-federal.png',
   './obra-playa.jpg',
   './obra-soldado.jpg',
   './obra-victoria.jpg',

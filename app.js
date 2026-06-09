@@ -5,6 +5,17 @@
 // Initial Mock Artworks (displayed if localStorage is empty)
 const INITIAL_ARTWORKS = [
     {
+        id: "artwork-federal",
+        title: "Forjadores de la Historia",
+        year: 2009,
+        category: "oleo",
+        medium: "Óleo sobre lienzo",
+        size: "1.10 m × 0.90 m",
+        author: "O. J. Comello (Noviembre, 2009)",
+        description: "Esta pintura rinde homenaje a nuestras raíces riojanas. Utilizando como fondo los colores de la bandera de la provincia de La Rioja, el autor dibuja el mapa provincial y dentro de él entrelaza los rostros de los protagonistas de nuestra historia. La obra invita a reflexionar sobre el pasado, mostrando la unión de los pueblos originarios, la época colonial y la impronta de los caudillos federales que forjaron la identidad y la autonomía de nuestra tierra.",
+        image: "/obra-federal.png"
+    },
+    {
         id: "artwork-playa",
         title: "Caminata al Atardecer",
         year: 2026,
@@ -127,7 +138,7 @@ function loadState() {
                 INITIAL_ARTWORKS.forEach(initArt => {
                     const hasArt = artworks.some(art => art.id === initArt.id);
                     if (!hasArt) {
-                        artworks.push(initArt);
+                        artworks.unshift(initArt);
                         updated = true;
                     }
                 });
@@ -498,6 +509,9 @@ function handleAddArtwork(e) {
         finalImageUrl = urlValue;
     }
 
+    const author = document.getElementById("artAuthor") ? document.getElementById("artAuthor").value.trim() : "";
+    const description = document.getElementById("artDescription") ? document.getElementById("artDescription").value.trim() : "";
+
     // Create new artwork object
     const newArt = {
         id: `artwork-${Date.now()}`,
@@ -506,6 +520,8 @@ function handleAddArtwork(e) {
         category,
         medium,
         size,
+        author,
+        description,
         image: finalImageUrl
     };
 
@@ -536,6 +552,30 @@ function openLightbox(index) {
     lightboxCategory.textContent = art.category.toUpperCase();
     lightboxMedium.innerHTML = art.medium ? `<i class="fa-solid fa-palette"></i> ${art.medium}` : '';
     lightboxSize.innerHTML = art.size ? `<i class="fa-solid fa-ruler-combined"></i> ${art.size}` : '';
+
+    // Author field
+    const lightboxAuthor = document.getElementById("lightboxAuthor");
+    if (lightboxAuthor) {
+        if (art.author) {
+            lightboxAuthor.innerHTML = `<i class="fa-solid fa-user-pen"></i> ${art.author}`;
+            lightboxAuthor.style.display = "";
+        } else {
+            lightboxAuthor.innerHTML = "";
+            lightboxAuthor.style.display = "none";
+        }
+    }
+
+    // Description field
+    const lightboxDescription = document.getElementById("lightboxDescription");
+    if (lightboxDescription) {
+        if (art.description) {
+            lightboxDescription.textContent = art.description;
+            lightboxDescription.parentElement.style.display = "";
+        } else {
+            lightboxDescription.textContent = "";
+            lightboxDescription.parentElement.style.display = "none";
+        }
+    }
 
     openModal(lightboxModal);
 }
