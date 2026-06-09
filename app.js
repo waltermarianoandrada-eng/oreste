@@ -137,11 +137,28 @@ function loadState() {
             } else {
                 let updated = false;
                 // Asegurar que todas las obras iniciales estén agregadas si no existen
+                // Y sincronizar los campos de las que ya existen (para reflejar cambios del servidor)
                 INITIAL_ARTWORKS.forEach(initArt => {
-                    const hasArt = artworks.some(art => art.id === initArt.id);
-                    if (!hasArt) {
+                    const existingIndex = artworks.findIndex(art => art.id === initArt.id);
+                    if (existingIndex === -1) {
+                        // Obra nueva: agregarla
                         artworks.unshift(initArt);
                         updated = true;
+                    } else {
+                        // Obra existente: sincronizar campos editables (title, medium, size, author, description, image estática)
+                        const existing = artworks[existingIndex];
+                        const fieldsToSync = ["title", "year", "medium", "size", "author", "description"];
+                        fieldsToSync.forEach(field => {
+                            if (initArt[field] !== undefined && existing[field] !== initArt[field]) {
+                                existing[field] = initArt[field];
+                                updated = true;
+                            }
+                        });
+                        // Sincronizar imagen solo si es una ruta estática (no base64 del usuario)
+                        if (initArt.image && !initArt.image.startsWith("data:") && existing.image !== initArt.image) {
+                            existing.image = initArt.image;
+                            updated = true;
+                        }
                     }
                 });
                 
