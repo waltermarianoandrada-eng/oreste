@@ -1,4 +1,4 @@
-const CACHE_NAME = 'comello-art-gallery-v2';
+const CACHE_NAME = 'comello-art-gallery-v3';
 const ASSETS = [
   './',
   './index.html',
@@ -10,7 +10,8 @@ const ASSETS = [
   './artist-profile.png',
   './obra-playa.jpg',
   './obra-soldado.jpg',
-  './obra-victoria.jpg'
+  './obra-victoria.jpg',
+  './obra-flores.png'
 ];
 
 // Install Event

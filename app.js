@@ -30,6 +30,15 @@ const INITIAL_ARTWORKS = [
         medium: "Dibujo monocromático",
         size: "70 x 50 cm",
         image: "/obra-victoria.jpg"
+    },
+    {
+        id: "artwork-flores",
+        title: "Flores en Florero Azul",
+        year: 2026,
+        category: "oleo",
+        medium: "Óleo sobre lienzo",
+        size: "60 x 80 cm",
+        image: "/obra-flores.png"
     }
 ];
 
@@ -113,13 +122,15 @@ function loadState() {
                 artworks = [...INITIAL_ARTWORKS];
                 saveState();
             } else {
-                // Asegurar que la obra de Victoria Romero esté agregada si no existe
-                const hasVictoria = artworks.some(art => art.id === "artwork-victoria");
                 let updated = false;
-                if (!hasVictoria) {
-                    artworks.push(INITIAL_ARTWORKS.find(art => art.id === "artwork-victoria"));
-                    updated = true;
-                }
+                // Asegurar que todas las obras iniciales estén agregadas si no existen
+                INITIAL_ARTWORKS.forEach(initArt => {
+                    const hasArt = artworks.some(art => art.id === initArt.id);
+                    if (!hasArt) {
+                        artworks.push(initArt);
+                        updated = true;
+                    }
+                });
                 
                 // Corrección dinámica de rutas para Vite
                 artworks = artworks.map(art => {
