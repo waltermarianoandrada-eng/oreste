@@ -1220,12 +1220,86 @@ textarea:focus {
     .gallery-header {
         padding: 15px 10px;
     }
-    
+
+    /* En movil: flechas laterales ocultas, se usan botones internos */
     .lightbox-nav {
-        display: none; /* Hide side arrows on small screens */
+        display: none;
     }
-    
+
     .modal-box {
         padding: 20px;
     }
+}
+
+/* Navegacion movil dentro del lightbox */
+.lightbox-mobile-nav {
+    display: none; /* Solo visible en movil */
+}
+
+@media (max-width: 576px) {
+    .lightbox-mobile-nav {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 16px;
+        padding-top: 14px;
+        border-top: 1px solid var(--color-border);
+    }
+
+    .lightbox-mobile-nav button {
+        background: rgba(212, 175, 55, 0.1);
+        border: 1px solid var(--color-gold);
+        color: var(--color-gold);
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        font-size: 1.2rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: var(--transition-smooth);
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .lightbox-mobile-nav button:active {
+        background: var(--color-gold);
+        color: var(--color-bg-deep);
+        transform: scale(0.95);
+    }
+}
+
+/* Boton flotante Volver Arriba */
+.scroll-to-top-btn {
+    position: fixed;
+    bottom: 28px;
+    right: 20px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--color-gold);
+    color: var(--color-bg-deep);
+    border: none;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4), var(--shadow-gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    cursor: pointer;
+    z-index: 500;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(20px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.scroll-to-top-btn.visible {
+    opacity: 1;
+    pointer-events: all;
+    transform: translateY(0);
+}
+
+.scroll-to-top-btn:hover {
+    background: var(--color-gold-hover);
+    transform: translateY(-3px);
 }

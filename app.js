@@ -304,9 +304,36 @@ function setupEventListeners() {
         });
     });
 
-    // Lightbox navigation
+    // Lightbox navigation (desktop side buttons)
     lightboxPrevBtn.addEventListener("click", navigateLightboxPrev);
     lightboxNextBtn.addEventListener("click", navigateLightboxNext);
+
+    // Lightbox navigation (mobile bottom buttons)
+    const lightboxMobilePrev = document.getElementById("lightboxMobilePrev");
+    const lightboxMobileNext = document.getElementById("lightboxMobileNext");
+    if (lightboxMobilePrev) lightboxMobilePrev.addEventListener("click", navigateLightboxPrev);
+    if (lightboxMobileNext) lightboxMobileNext.addEventListener("click", navigateLightboxNext);
+
+    // Touch / Swipe support for lightbox
+    let touchStartX = 0;
+    let touchEndX = 0;
+    const SWIPE_THRESHOLD = 50;
+
+    lightboxModal.addEventListener("touchstart", (e) => {
+        touchStartX = e.changedTouches[0].clientX;
+    }, { passive: true });
+
+    lightboxModal.addEventListener("touchend", (e) => {
+        touchEndX = e.changedTouches[0].clientX;
+        const diff = touchStartX - touchEndX;
+        if (Math.abs(diff) > SWIPE_THRESHOLD) {
+            if (diff > 0) {
+                navigateLightboxNext(); // swipe left → siguiente
+            } else {
+                navigateLightboxPrev(); // swipe right → anterior
+            }
+        }
+    }, { passive: true });
 
     // Keydown for Modal & Lightbox navigation
     document.addEventListener("keydown", (e) => {
@@ -338,6 +365,22 @@ function setupEventListeners() {
             });
         }
     });
+
+    // Scroll-to-top button
+    const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+    if (scrollToTopBtn) {
+        window.addEventListener("scroll", () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.add("visible");
+            } else {
+                scrollToTopBtn.classList.remove("visible");
+            }
+        }, { passive: true });
+
+        scrollToTopBtn.addEventListener("click", () => {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+    }
 
     // Reset preview button
     removePreviewBtn.addEventListener("click", resetUploadInputs);
