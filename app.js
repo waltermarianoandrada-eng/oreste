@@ -49,6 +49,8 @@ const INITIAL_ARTWORKS = [
         category: "oleo",
         medium: "Óleo sobre lienzo",
         size: "60 x 80 cm",
+        author: "O. J. Comello",
+        description: "En este bodegón, el autor explora el color y la textura a través de un florero clásico. El protagonismo se divide entre el azul profundo del jarrón, trabajado con visibles trazos de espátula o pincel cargado, y la delicadeza del ramo superior, donde conviven calas blancas y espigas de flores azuladas que buscan la verticalidad. El fondo texturado en tonos cálidos envuelve la escena, dándole una atmósfera acogedora y luminosa, ideal para el entorno de encuentro y tradición que caracteriza a El Topón.",
         image: "/obra-flores.png"
     }
 ];
