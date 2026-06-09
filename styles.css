@@ -900,6 +900,8 @@ textarea:focus {
 /* Lightbox Modal */
 .modal.lightbox {
     z-index: 2000;
+    align-items: flex-start; /* Permite scroll desde arriba */
+    overflow-y: auto;
 }
 
 .modal.lightbox .modal-backdrop {
@@ -918,6 +920,8 @@ textarea:focus {
     z-index: 2;
     transform: scale(0.95);
     transition: var(--transition-smooth);
+    margin: auto; /* centrado vertical cuando hay espacio */
+    padding: 60px 0 40px 0; /* espacio para boton cerrar arriba */
 }
 
 .modal.lightbox.active .lightbox-content {
@@ -925,15 +929,16 @@ textarea:focus {
 }
 
 .lightbox-image-wrapper {
-    max-height: 70vh;
+    max-height: 60vh;
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 100%;
 }
 
 .lightbox-image-wrapper img {
     max-width: 100%;
-    max-height: 70vh;
+    max-height: 60vh;
     object-fit: contain;
     
     /* Elegante marco de museo en Lightbox */
@@ -941,8 +946,8 @@ textarea:focus {
     outline: 1.5px solid var(--color-gold);
     outline-offset: -18px;
     box-shadow: 0 15px 50px rgba(0,0,0,0.9);
-    background-color: #f2efe9; /* Fondo crema de passe-partout */
-    padding: 12px; /* Espaciado interno passe-partout */
+    background-color: #f2efe9;
+    padding: 12px;
 }
 
 .lightbox-info {
@@ -1228,6 +1233,37 @@ textarea:focus {
 
     .modal-box {
         padding: 20px;
+    }
+
+    /* Lightbox en movil: imagen pequeña para que quepa con la descripcion */
+    .lightbox-image-wrapper {
+        max-height: 40vh;
+    }
+
+    .lightbox-image-wrapper img {
+        max-height: 40vh;
+        border-width: 10px;
+        padding: 6px;
+        outline-offset: -10px;
+    }
+
+    .lightbox-content {
+        width: 95vw;
+        padding: 55px 0 30px 0;
+        gap: 14px;
+    }
+
+    .lightbox-info {
+        padding: 16px 18px;
+    }
+
+    #lightboxTitle {
+        font-size: 1.4rem;
+    }
+
+    /* Ocultar scroll-to-top cuando el lightbox esta abierto */
+    body.lightbox-open .scroll-to-top-btn {
+        display: none !important;
     }
 }
 

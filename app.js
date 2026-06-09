@@ -711,12 +711,22 @@ function navigateLightboxNext() {
 // ==========================================================================
 function openModal(modal) {
     modal.classList.add("active");
-    document.body.style.overflow = "hidden"; // Prevent background scroll
+    if (modal.classList.contains("lightbox")) {
+        // El lightbox necesita scroll propio — no bloqueamos el body scroll
+        document.body.classList.add("lightbox-open");
+    } else {
+        document.body.style.overflow = "hidden";
+    }
 }
 
 function closeModal(modal) {
     modal.classList.remove("active");
-    document.body.style.overflow = ""; // Re-enable background scroll
+    document.body.classList.remove("lightbox-open");
+    document.body.style.overflow = "";
+    // Volver al tope del lightbox para la próxima vez
+    if (modal.classList.contains("lightbox")) {
+        modal.scrollTop = 0;
+    }
 }
 
 // ==========================================================================
