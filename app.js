@@ -43,7 +43,7 @@ const INITIAL_ARTWORKS = [
     {
         id: "artwork-victoria",
         title: "Victoria Romero",
-        year: 2026,
+        year: 2018,
         category: "dibujo",
         medium: "Dibujo monocromático",
         size: "70 x 50 cm",
