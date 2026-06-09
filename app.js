@@ -311,8 +311,10 @@ function setupEventListeners() {
     // Lightbox navigation (mobile bottom buttons)
     const lightboxMobilePrev = document.getElementById("lightboxMobilePrev");
     const lightboxMobileNext = document.getElementById("lightboxMobileNext");
+    const lightboxMobileClose = document.getElementById("lightboxMobileClose");
     if (lightboxMobilePrev) lightboxMobilePrev.addEventListener("click", navigateLightboxPrev);
     if (lightboxMobileNext) lightboxMobileNext.addEventListener("click", navigateLightboxNext);
+    if (lightboxMobileClose) lightboxMobileClose.addEventListener("click", () => closeModal(lightboxModal));
 
     // Touch / Swipe support for lightbox
     let touchStartX = 0;
