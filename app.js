@@ -43,6 +43,10 @@ const INITIAL_ARTWORKS = [
         category: "dibujo",
         medium: "Dibujo monocromático",
         size: "70 x 50 cm",
+        author: "O. J. Comello",
+        tribute: "Victoria Romero ("La Chacha")",
+        origin: "Patrimonio escolar · Barrio Nueva Rioja",
+        description: "Este retrato rinde homenaje a una de las máximas heroínas de la historia riojana: Victoria Romero, quien luchó codo a codo junto a su esposo, el General Ángel Vicente \"Chacho\" Peñaloza. La obra utiliza pinceladas enérgicas y un estilo en blanco y negro que evoca el pasado histórico de la provincia, destacando su rostro envuelto en un manto oscuro que resalta la solemnidad del personaje. Al haber sido donado directamente por el pintor O. J. Comello a esta comunidad educativa del barrio Nueva Rioja, el cuadro se convierte en un valioso recurso pedagógico que invita a alumnos y docentes a reflexionar sobre el rol de la mujer en la construcción de nuestra patria chica.",
         image: "/obra-victoria.jpg"
     },
     {
@@ -574,6 +578,19 @@ function openLightbox(index) {
     lightboxCategory.textContent = art.category.toUpperCase();
     lightboxMedium.innerHTML = art.medium ? `<i class="fa-solid fa-palette"></i> ${art.medium}` : '';
     lightboxSize.innerHTML = art.size ? `<i class="fa-solid fa-ruler-combined"></i> ${art.size}` : '';
+
+    // Tribute/Homenaje field
+    const lightboxTribute = document.getElementById("lightboxTribute");
+    const lightboxTributeBlock = document.getElementById("lightboxTributeBlock");
+    if (lightboxTribute) {
+        if (art.tribute) {
+            lightboxTribute.innerHTML = `<i class="fa-solid fa-star"></i> Homenaje a: <em>${art.tribute}</em>`;
+            lightboxTributeBlock.style.display = "";
+        } else {
+            lightboxTribute.innerHTML = "";
+            lightboxTributeBlock.style.display = "none";
+        }
+    }
 
     // Author field
     const lightboxAuthor = document.getElementById("lightboxAuthor");

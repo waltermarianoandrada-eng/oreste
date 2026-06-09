@@ -996,6 +996,25 @@ textarea:focus {
     margin-right: 5px;
 }
 
+/* Lightbox tribute/homenaje block */
+.lightbox-tribute-block {
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+#lightboxTribute {
+    font-size: 0.88rem;
+    color: var(--color-gold);
+    font-style: italic;
+    letter-spacing: 0.03em;
+}
+
+#lightboxTribute i {
+    color: var(--color-gold);
+    margin-right: 5px;
+    font-size: 0.75rem;
+}
+
 /* Lightbox origin/collection block */
 .lightbox-origin-block {
     margin-top: 10px;
