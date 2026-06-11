@@ -54,6 +54,17 @@ const INITIAL_ARTWORKS = [
         image: "/obra-victoria.jpg"
     },
     {
+        id: "artwork-pamela",
+        title: "Retrato de Dama con Pamela",
+        year: 2026,
+        category: "oleo",
+        medium: "Óleo sobre soporte (texturizado)",
+        size: "30 x 20 cm",
+        author: "O. J. Comello",
+        description: "Este delicado retrato de formato vertical captura la esencia de la elegancia clásica a través de una paleta cromática sutil y una textura táctil muy particular. La obra presenta la silueta de perfil de una mujer noble o de la alta sociedad, ataviada con una imponente pamela (sombrero de ala ancha) decorada con detalles florales en relieve, un elemento característico de la moda de finales del siglo XIX y principios del XX. El artista utiliza una técnica de empaste sutil, donde las pinceladas visibles y el relieve texturizado del fondo aportan volumen, dinamismo y una cualidad casi escultórica a la superficie pictórica.",
+        image: "/obra-pamela.png"
+    },
+    {
         id: "artwork-flores",
         title: "Flores en Florero Azul",
         year: 2026,
