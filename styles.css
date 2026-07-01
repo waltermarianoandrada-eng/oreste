@@ -280,21 +280,22 @@ h1, h2, h3, h4 {
 
 /* Share Button */
 .btn-share {
-    background-color: rgba(212, 175, 55, 0.08);
-    border: 1px solid var(--color-gold);
-    color: var(--color-gold);
-    padding: 8px 18px;
+    background-color: var(--color-gold);
+    border: none;
+    color: var(--color-bg-deep);
+    padding: 9px 18px;
     border-radius: 20px;
     cursor: pointer;
     font-family: var(--font-sans);
     font-size: 0.85rem;
-    font-weight: 500;
+    font-weight: 700;
     display: flex;
     align-items: center;
     gap: 8px;
     transition: var(--transition-smooth);
     margin-right: 10px;
     white-space: nowrap;
+    box-shadow: 0 2px 10px rgba(212, 175, 55, 0.35);
 }
 
 /* Siempre mostrar el texto del boton compartir */
@@ -303,16 +304,19 @@ h1, h2, h3, h4 {
 }
 
 .btn-share:hover {
-    background-color: var(--color-gold);
-    color: var(--color-bg-deep);
-    box-shadow: var(--shadow-gold);
-    transform: translateY(-1px);
+    background-color: var(--color-gold-hover);
+    box-shadow: 0 4px 20px rgba(212, 175, 55, 0.55);
+    transform: translateY(-2px);
+}
+
+.btn-share:active {
+    transform: translateY(0);
 }
 
 .btn-share.copied {
-    border-color: var(--color-success);
-    color: var(--color-success);
-    background-color: rgba(48, 209, 88, 0.08);
+    background-color: var(--color-success);
+    box-shadow: 0 2px 10px rgba(48, 209, 88, 0.4);
+    color: #fff;
 }
 
 .btn-share i {
