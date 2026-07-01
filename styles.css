@@ -280,11 +280,11 @@ h1, h2, h3, h4 {
 
 /* Share Button */
 .btn-share {
-    background-color: transparent;
-    border: 1px solid var(--color-border);
-    color: var(--color-text-secondary);
-    padding: 8px 16px;
-    border-radius: 4px;
+    background-color: rgba(212, 175, 55, 0.08);
+    border: 1px solid var(--color-gold);
+    color: var(--color-gold);
+    padding: 8px 18px;
+    border-radius: 20px;
     cursor: pointer;
     font-family: var(--font-sans);
     font-size: 0.85rem;
@@ -294,13 +294,19 @@ h1, h2, h3, h4 {
     gap: 8px;
     transition: var(--transition-smooth);
     margin-right: 10px;
+    white-space: nowrap;
+}
+
+/* Siempre mostrar el texto del boton compartir */
+.btn-share .btn-text {
+    display: inline !important;
 }
 
 .btn-share:hover {
-    border-color: var(--color-gold);
-    color: var(--color-gold);
-    background-color: rgba(212, 175, 55, 0.08);
+    background-color: var(--color-gold);
+    color: var(--color-bg-deep);
     box-shadow: var(--shadow-gold);
+    transform: translateY(-1px);
 }
 
 .btn-share.copied {
