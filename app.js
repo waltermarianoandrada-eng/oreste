@@ -435,14 +435,36 @@ function renderGallery() {
         emptyGalleryState.classList.add("hidden");
     }
 
+    // Actualizar contadores en botones de filtro
+    filterButtons.forEach(btn => {
+        const filter = btn.dataset.filter;
+        const count = filter === "all" 
+            ? artworks.length 
+            : artworks.filter(a => a.category === filter).length;
+        const label = btn.dataset.label || btn.textContent.replace(/\s*\(\d+\)/, "").trim();
+        btn.dataset.label = label;
+        btn.textContent = count > 0 ? `${label} (${count})` : label;
+        if (btn.classList.contains("active")) {
+            btn.textContent = count > 0 ? `${label} (${count})` : label;
+        }
+    });
+
+    const thirtyDaysAgo = Date.now() - 30 * 24 * 60 * 60 * 1000;
+
     filtered.forEach((art, index) => {
         const card = document.createElement("div");
         card.className = "art-card";
+        // Animación escalonada: delay incremental por cada card
+        card.style.animationDelay = `${index * 80}ms`;
         
         // Find index in main artworks array for lightbox syncing
         const mainIndex = artworks.findIndex(a => a.id === art.id);
 
+        // Determinar si la obra es reciente (añadida en los últimos 30 días via timestamp)
+        const isNew = art.addedAt && art.addedAt > thirtyDaysAgo;
+
         card.innerHTML = `
+            ${ isNew ? `<span class="art-new-badge">Nuevo</span>` : '' }
             <div class="art-image-container">
                 <img src="${art.image}" alt="${art.title}" class="art-image" loading="lazy">
                 <div class="art-overlay">
@@ -612,7 +634,7 @@ function handleAddArtwork(e) {
     };
 
     // Store state
-    artworks.unshift(newArt); // Add to beginning of catalog
+    artworks.unshift({ ...newArt, addedAt: Date.now() }); // Add timestamp for "Nuevo" badge
     saveState();
     renderGallery();
 
@@ -628,79 +650,107 @@ function handleAddArtwork(e) {
 // ==========================================================================
 function openLightbox(index) {
     if (index < 0 || index >= artworks.length) return;
+    
+    const isAlreadyOpen = lightboxModal.classList.contains("active");
+    const doFade = isAlreadyOpen && activeLightboxIndex !== index;
+    
     activeLightboxIndex = index;
     
     const art = artworks[index];
-    
-    lightboxImage.src = art.image;
-    lightboxTitle.textContent = art.title;
-    lightboxYear.textContent = art.year;
-    lightboxCategory.textContent = art.category.toUpperCase();
-    lightboxMedium.innerHTML = art.medium ? `<i class="fa-solid fa-palette"></i> ${art.medium}` : '';
-    lightboxSize.innerHTML = art.size ? `<i class="fa-solid fa-ruler-combined"></i> ${art.size}` : '';
 
-    // Tribute/Homenaje field
-    const lightboxTribute = document.getElementById("lightboxTribute");
-    const lightboxTributeBlock = document.getElementById("lightboxTributeBlock");
-    if (lightboxTribute) {
-        if (art.tribute) {
-            lightboxTribute.innerHTML = `<i class="fa-solid fa-star"></i> Homenaje a: <em>${art.tribute}</em>`;
-            lightboxTributeBlock.style.display = "";
-        } else {
-            lightboxTribute.innerHTML = "";
-            lightboxTributeBlock.style.display = "none";
+    const applyContent = () => {
+        lightboxImage.src = art.image;
+        lightboxTitle.textContent = art.title;
+        lightboxYear.textContent = art.year;
+        lightboxCategory.textContent = art.category.toUpperCase();
+        lightboxMedium.innerHTML = art.medium ? `<i class="fa-solid fa-palette"></i> ${art.medium}` : '';
+        lightboxSize.innerHTML = art.size ? `<i class="fa-solid fa-ruler-combined"></i> ${art.size}` : '';
+
+        // Indicador de posición
+        const posIndicator = document.getElementById("lightboxPositionIndicator");
+        if (posIndicator) {
+            posIndicator.textContent = `${index + 1} / ${artworks.length}`;
         }
+
+        // Tribute/Homenaje field
+        const lightboxTribute = document.getElementById("lightboxTribute");
+        const lightboxTributeBlock = document.getElementById("lightboxTributeBlock");
+        if (lightboxTribute) {
+            if (art.tribute) {
+                lightboxTribute.innerHTML = `<i class="fa-solid fa-star"></i> Homenaje a: <em>${art.tribute}</em>`;
+                lightboxTributeBlock.style.display = "";
+            } else {
+                lightboxTribute.innerHTML = "";
+                lightboxTributeBlock.style.display = "none";
+            }
+        }
+
+        // Author field
+        const lightboxAuthor = document.getElementById("lightboxAuthor");
+        if (lightboxAuthor) {
+            if (art.author) {
+                lightboxAuthor.innerHTML = `<i class="fa-solid fa-user-pen"></i> ${art.author}`;
+                lightboxAuthor.style.display = "";
+            } else {
+                lightboxAuthor.innerHTML = "";
+                lightboxAuthor.style.display = "none";
+            }
+        }
+
+        // Date field
+        const lightboxDate = document.getElementById("lightboxDate");
+        if (lightboxDate) {
+            if (art.date) {
+                lightboxDate.innerHTML = `<i class="fa-solid fa-calendar-days"></i> ${art.date}`;
+                lightboxDate.style.display = "";
+            } else {
+                lightboxDate.innerHTML = "";
+                lightboxDate.style.display = "none";
+            }
+        }
+
+        // Description field
+        const lightboxDescription = document.getElementById("lightboxDescription");
+        if (lightboxDescription) {
+            if (art.description) {
+                lightboxDescription.textContent = art.description;
+                lightboxDescription.parentElement.style.display = "";
+            } else {
+                lightboxDescription.textContent = "";
+                lightboxDescription.parentElement.style.display = "none";
+            }
+        }
+
+        // Origin/Collection field
+        const lightboxOrigin = document.getElementById("lightboxOrigin");
+        if (lightboxOrigin) {
+            if (art.origin) {
+                lightboxOrigin.innerHTML = `<i class="fa-solid fa-location-dot"></i> ${art.origin}`;
+                lightboxOrigin.style.display = "";
+            } else {
+                lightboxOrigin.innerHTML = "";
+                lightboxOrigin.style.display = "none";
+            }
+        }
+
+        // Fade-in imagen después de cargar contenido
+        if (doFade) {
+            lightboxImage.classList.remove("fading");
+        }
+    };
+
+    if (doFade) {
+        // Fade-out, luego cambiar contenido y fade-in
+        lightboxImage.classList.add("fading");
+        setTimeout(applyContent, 300);
+    } else {
+        applyContent();
+        openModal(lightboxModal);
     }
 
-    // Author field
-    const lightboxAuthor = document.getElementById("lightboxAuthor");
-    if (lightboxAuthor) {
-        if (art.author) {
-            lightboxAuthor.innerHTML = `<i class="fa-solid fa-user-pen"></i> ${art.author}`;
-            lightboxAuthor.style.display = "";
-        } else {
-            lightboxAuthor.innerHTML = "";
-            lightboxAuthor.style.display = "none";
-        }
+    if (!isAlreadyOpen) {
+        openModal(lightboxModal);
     }
-
-    // Date field
-    const lightboxDate = document.getElementById("lightboxDate");
-    if (lightboxDate) {
-        if (art.date) {
-            lightboxDate.innerHTML = `<i class="fa-solid fa-calendar-days"></i> ${art.date}`;
-            lightboxDate.style.display = "";
-        } else {
-            lightboxDate.innerHTML = "";
-            lightboxDate.style.display = "none";
-        }
-    }
-
-    // Description field
-    const lightboxDescription = document.getElementById("lightboxDescription");
-    if (lightboxDescription) {
-        if (art.description) {
-            lightboxDescription.textContent = art.description;
-            lightboxDescription.parentElement.style.display = "";
-        } else {
-            lightboxDescription.textContent = "";
-            lightboxDescription.parentElement.style.display = "none";
-        }
-    }
-
-    // Origin/Collection field
-    const lightboxOrigin = document.getElementById("lightboxOrigin");
-    if (lightboxOrigin) {
-        if (art.origin) {
-            lightboxOrigin.innerHTML = `<i class="fa-solid fa-location-dot"></i> ${art.origin}`;
-            lightboxOrigin.style.display = "";
-        } else {
-            lightboxOrigin.innerHTML = "";
-            lightboxOrigin.style.display = "none";
-        }
-    }
-
-    openModal(lightboxModal);
 }
 
 function navigateLightboxPrev() {
