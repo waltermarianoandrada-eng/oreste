@@ -278,6 +278,45 @@ h1, h2, h3, h4 {
     box-shadow: var(--shadow-gold);
 }
 
+/* Share Button */
+.btn-share {
+    background-color: transparent;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: var(--transition-smooth);
+    margin-right: 10px;
+}
+
+.btn-share:hover {
+    border-color: var(--color-gold);
+    color: var(--color-gold);
+    background-color: rgba(212, 175, 55, 0.08);
+    box-shadow: var(--shadow-gold);
+}
+
+.btn-share.copied {
+    border-color: var(--color-success);
+    color: var(--color-success);
+    background-color: rgba(48, 209, 88, 0.08);
+}
+
+.btn-share i {
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.btn-share:hover i {
+    transform: rotate(-15deg) scale(1.15);
+}
+
 /* Gallery Container */
 .gallery-container {
     max-width: 1400px;

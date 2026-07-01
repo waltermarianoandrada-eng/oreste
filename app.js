@@ -397,6 +397,46 @@ function setupEventListeners() {
 
     // Reset preview button
     removePreviewBtn.addEventListener("click", resetUploadInputs);
+
+    // Share Gallery Button
+    const shareGalleryBtn = document.getElementById("shareGalleryBtn");
+    if (shareGalleryBtn) {
+        shareGalleryBtn.addEventListener("click", async () => {
+            const shareData = {
+                title: "Oreste Comello | Galería de Arte",
+                text: "Te invito a visitar la galería de arte de Oreste Comello — pintor y escultor contemporáneo de La Rioja, Argentina. 🎨",
+                url: window.location.href
+            };
+
+            // Web Share API (disponible en movil y navegadores modernos)
+            if (navigator.share) {
+                try {
+                    await navigator.share(shareData);
+                    showToast("¡Galería compartida con éxito!", "success");
+                } catch (err) {
+                    // El usuario canceló el diálogo — no mostrar error
+                    if (err.name !== "AbortError") {
+                        console.warn("Error al compartir:", err);
+                    }
+                }
+            } else {
+                // Fallback: copiar URL al portapapeles
+                try {
+                    await navigator.clipboard.writeText(window.location.href);
+                    // Feedback visual en el botón
+                    shareGalleryBtn.innerHTML = `<i class="fa-solid fa-check"></i> <span class="btn-text">¡Link copiado!</span>`;
+                    shareGalleryBtn.classList.add("copied");
+                    showToast("Link de la galería copiado al portapapeles", "success");
+                    setTimeout(() => {
+                        shareGalleryBtn.innerHTML = `<i class="fa-solid fa-share-nodes"></i> <span class="btn-text">Compartir</span>`;
+                        shareGalleryBtn.classList.remove("copied");
+                    }, 2500);
+                } catch (err) {
+                    showToast("No se pudo copiar el link. Copialo manualmente desde la barra de dirección.", "error");
+                }
+            }
+        });
+    }
 }
 
 // ==========================================================================
