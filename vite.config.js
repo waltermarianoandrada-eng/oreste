@@ -1,16 +1,19 @@
 import { defineConfig } from 'vite';
-import artworksApi from './api/artworks.js';
 
-export default defineConfig({
-  server: {
-    port: 5188
-  },
-  plugins: [
-    {
+export default defineConfig(({ command }) => {
+  const plugins = [];
+
+  // Solo inyectar la API localmente durante el desarrollo (npm run dev)
+  // En Vercel (producción), las Serverless Functions manejan la API automáticamente
+  if (command === 'serve') {
+    plugins.push({
       name: 'api-server',
-      configureServer(server) {
+      async configureServer(server) {
+        // Cargar el archivo de forma dinámica solo en local
+        const mod = await import('./api/artworks.js');
+        const artworksApi = mod.default || mod;
+
         server.middlewares.use('/api/artworks', (req, res, next) => {
-          // Helper methods to simulate Vercel/Express response
           res.status = function(code) {
             res.statusCode = code;
             return res;
@@ -30,13 +33,19 @@ export default defineConfig({
               artworksApi(req, res);
             });
           } else {
-            // For GET and DELETE, parse query parameters
             const url = new URL(req.originalUrl || req.url, `http://${req.headers.host}`);
             req.query = Object.fromEntries(url.searchParams);
             artworksApi(req, res);
           }
         });
       }
-    }
-  ]
+    });
+  }
+
+  return {
+    server: {
+      port: 5188
+    },
+    plugins
+  };
 });
