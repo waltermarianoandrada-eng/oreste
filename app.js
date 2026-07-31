@@ -145,71 +145,35 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-// Load artworks from localStorage or use defaults
-function loadState() {
-    const storedArt = localStorage.getItem("oreste_artworks");
-    if (storedArt) {
-        try {
-            artworks = JSON.parse(storedArt);
-            // Si el almacenamiento contiene las obras de prueba antiguas de Unsplash, las reemplazamos por las reales locales
-            const hasOldMocks = artworks.some(art => art.id.startsWith("mock-"));
-            if (hasOldMocks) {
+// Load artworks from PostgreSQL API
+async function loadState() {
+    try {
+        const response = await fetch('/api/artworks');
+        if (response.ok) {
+            const data = await response.json();
+            
+            // If the database is completely empty, we might want to populate it with defaults initially
+            if (data.length === 0) {
+                console.log("Database is empty, using fallback initial artworks");
                 artworks = [...INITIAL_ARTWORKS];
-                saveState();
+                // Optionally we could POST them all to DB here, but let's just show them for now
             } else {
-                let updated = false;
-                // Asegurar que todas las obras iniciales estén agregadas si no existen
-                // Y sincronizar los campos de las que ya existen (para reflejar cambios del servidor)
-                INITIAL_ARTWORKS.forEach(initArt => {
-                    const existingIndex = artworks.findIndex(art => art.id === initArt.id);
-                    if (existingIndex === -1) {
-                        // Obra nueva: agregarla
-                        artworks.unshift(initArt);
-                        updated = true;
-                    } else {
-                        // Obra existente: sincronizar campos editables (title, medium, size, author, description, image estática)
-                        const existing = artworks[existingIndex];
-                        const fieldsToSync = ["title", "year", "medium", "size", "author", "date", "origin", "tribute", "description"];
-                        fieldsToSync.forEach(field => {
-                            if (initArt[field] !== undefined && existing[field] !== initArt[field]) {
-                                existing[field] = initArt[field];
-                                updated = true;
-                            }
-                        });
-                        // Sincronizar imagen solo si es una ruta estática (no base64 del usuario)
-                        if (initArt.image && !initArt.image.startsWith("data:") && existing.image !== initArt.image) {
-                            existing.image = initArt.image;
-                            updated = true;
-                        }
-                    }
-                });
-                
-                // Corrección dinámica de rutas para Vite
-                artworks = artworks.map(art => {
-                    if (art.image && !art.image.startsWith("/") && !art.image.startsWith("http") && !art.image.startsWith("data:")) {
-                        art.image = "/" + art.image;
-                        updated = true;
-                    }
-                    return art;
-                });
-                if (updated) {
-                    saveState();
-                }
+                artworks = data;
             }
-        } catch (e) {
-            console.error("Error parsing localStorage artworks, resetting to defaults", e);
+        } else {
+            console.error("Failed to fetch artworks from API, using fallback");
             artworks = [...INITIAL_ARTWORKS];
-            saveState();
         }
-    } else {
+    } catch (e) {
+        console.error("Error fetching from API, resetting to defaults", e);
         artworks = [...INITIAL_ARTWORKS];
-        saveState();
     }
     renderGallery();
 }
 
+// We don't need a local saveState anymore since we post directly to API
 function saveState() {
-    localStorage.setItem("oreste_artworks", JSON.stringify(artworks));
+    // Left empty to prevent breaking existing synchronous calls before we remove them
 }
 
 function checkAdminSession() {
@@ -548,15 +512,26 @@ function renderGallery() {
 // ==========================================================================
 // Admin Action: Delete Artwork
 // ==========================================================================
-function deleteArtwork(id) {
+async function deleteArtwork(id) {
     const art = artworks.find(a => a.id === id);
     if (!art) return;
 
     if (confirm(`¿Está seguro de que desea eliminar la obra "${art.title}"?`)) {
-        artworks = artworks.filter(a => a.id !== id);
-        saveState();
-        renderGallery();
-        showToast("Obra eliminada del catálogo", "info");
+        try {
+            const response = await fetch(`/api/artworks?id=${id}`, {
+                method: 'DELETE'
+            });
+            if (response.ok) {
+                artworks = artworks.filter(a => a.id !== id);
+                renderGallery();
+                showToast("Obra eliminada del catálogo", "info");
+            } else {
+                showToast("Error al eliminar de la nube.", "error");
+            }
+        } catch (error) {
+            console.error("Error deleting artwork", error);
+            showToast("Error de conexión al eliminar.", "error");
+        }
     }
 }
 
@@ -628,8 +603,13 @@ function resetUploadInputs() {
     imageDropzone.classList.remove("hidden");
 }
 
-function handleAddArtwork(e) {
+async function handleAddArtwork(e) {
     e.preventDefault();
+
+    const submitBtn = document.querySelector("#addArtworkForm button[type='submit']");
+    const originalBtnText = submitBtn.innerHTML;
+    submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Guardando...`;
+    submitBtn.disabled = true;
 
     const title = document.getElementById("artTitle").value.trim();
     const year = parseInt(document.getElementById("artYear").value);
@@ -645,6 +625,8 @@ function handleAddArtwork(e) {
     if (mode === "upload-file") {
         if (!uploadImageBase64) {
             showToast("Seleccione o arrastre una imagen local.", "error");
+            submitBtn.innerHTML = originalBtnText;
+            submitBtn.disabled = false;
             return;
         }
         finalImageUrl = uploadImageBase64;
@@ -652,6 +634,8 @@ function handleAddArtwork(e) {
         const urlValue = artUrlInput.value.trim();
         if (!urlValue) {
             showToast("Ingrese una URL de imagen válida.", "error");
+            submitBtn.innerHTML = originalBtnText;
+            submitBtn.disabled = false;
             return;
         }
         finalImageUrl = urlValue;
@@ -670,19 +654,37 @@ function handleAddArtwork(e) {
         size,
         author,
         description,
-        image: finalImageUrl
+        image: finalImageUrl,
+        added_at: Date.now()
     };
 
-    // Store state
-    artworks.unshift({ ...newArt, addedAt: Date.now() }); // Add timestamp for "Nuevo" badge
-    saveState();
-    renderGallery();
+    try {
+        const response = await fetch('/api/artworks', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newArt)
+        });
 
-    // Reset and Close
-    addArtworkForm.reset();
-    resetUploadInputs();
-    closeModal(adminPanelModal);
-    showToast(`"${title}" añadida con éxito`, "success");
+        if (response.ok) {
+            artworks.unshift(newArt);
+            renderGallery();
+            
+            addArtworkForm.reset();
+            resetUploadInputs();
+            closeModal(adminPanelModal);
+            showToast(`"${title}" añadida con éxito`, "success");
+        } else {
+            showToast("Error al guardar en la nube.", "error");
+        }
+    } catch (error) {
+        console.error("Error posting artwork", error);
+        showToast("Error de conexión al guardar.", "error");
+    } finally {
+        submitBtn.innerHTML = originalBtnText;
+        submitBtn.disabled = false;
+    }
 }
 
 // ==========================================================================
