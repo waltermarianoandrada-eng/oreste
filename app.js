@@ -575,18 +575,42 @@ function handleFileSelect(file) {
         return;
     }
 
-    // Limit base64 storage to 1.5MB to stay within ~5MB localStorage
-    if (file.size > 1.5 * 1024 * 1024) {
-        showToast("La imagen supera el límite de 1.5MB. Reduzca el tamaño o use una URL.", "error");
-        return;
-    }
-
     const reader = new FileReader();
     reader.onload = (e) => {
-        uploadImageBase64 = e.target.result;
-        imagePreview.src = uploadImageBase64;
-        imagePreviewContainer.classList.remove("hidden");
-        imageDropzone.classList.add("hidden");
+        const img = new Image();
+        img.onload = () => {
+            // Configurar tamaño máximo
+            const MAX_WIDTH = 1200;
+            const MAX_HEIGHT = 1200;
+            let width = img.width;
+            let height = img.height;
+
+            // Mantener proporciones
+            if (width > height) {
+                if (width > MAX_WIDTH) {
+                    height = Math.round((height *= MAX_WIDTH / width));
+                    width = MAX_WIDTH;
+                }
+            } else {
+                if (height > MAX_HEIGHT) {
+                    width = Math.round((width *= MAX_HEIGHT / height));
+                    height = MAX_HEIGHT;
+                }
+            }
+
+            const canvas = document.createElement("canvas");
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, width, height);
+
+            // Comprimir como JPEG al 75% de calidad (reduce el peso drásticamente)
+            uploadImageBase64 = canvas.toDataURL("image/jpeg", 0.75);
+            imagePreview.src = uploadImageBase64;
+            imagePreviewContainer.classList.remove("hidden");
+            imageDropzone.classList.add("hidden");
+        };
+        img.src = e.target.result;
     };
     reader.onerror = () => {
         showToast("Error al leer el archivo local.", "error");
