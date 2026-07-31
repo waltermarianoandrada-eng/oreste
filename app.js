@@ -700,7 +700,8 @@ async function handleAddArtwork(e) {
             closeModal(adminPanelModal);
             showToast(`"${title}" añadida con éxito`, "success");
         } else {
-            showToast("Error al guardar en la nube.", "error");
+            const errData = await response.json().catch(() => ({}));
+            showToast(`Error: ${errData.error || 'al guardar en la nube'}`, "error");
         }
     } catch (error) {
         console.error("Error posting artwork", error);

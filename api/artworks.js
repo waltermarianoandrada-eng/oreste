@@ -23,6 +23,10 @@ module.exports = async function handler(req, res) {
     return;
   }
 
+  if (!process.env.DATABASE_URL) {
+    return res.status(500).json({ error: 'Falta configurar DATABASE_URL en Vercel' });
+  }
+
   try {
     if (req.method === 'GET') {
       const { rows } = await pool.query('SELECT * FROM artworks ORDER BY added_at DESC');
