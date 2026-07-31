@@ -57,3 +57,11 @@ module.exports = async function handler(req, res) {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
+module.exports.config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '4mb',
+    },
+  },
+};
